@@ -1,4 +1,5 @@
-#include MyGPIO.h
+#include "MyGPIO.h"
+#define PIN_NUMBER 5
 
 //Renvoie la valeur trouvée dans le Control Register correspondant au pin
 //Je sais pas si c'est ce qui est attendu
@@ -48,12 +49,41 @@ void MyGPIO_Toggle(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 
 
 void MyGPIO_Init (MyGPIO_Struct_TypeDef * GPIOStructPtr){
-        	
+	
+	if(GPIOStructPtr->GPIO_Conf == Out_Ppull){
+		GPIOStructPtr->GPIO->CRL &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
+		GPIOStructPtr->GPIO->CRL |= 0x3 << ( (GPIOStructPtr->GPIO_Pin)*4);
+	}
 
 }
+
+/*typedef struct
+{
+  __IO uint32_t CRL;
+  __IO uint32_t CRH;
+  __IO uint32_t IDR;
+  __IO uint32_t ODR;
+  __IO uint32_t BSRR;
+  __IO uint32_t BRR;
+  __IO uint32_t LCKR;
+} GPIO_TypeDef;*/
+
+
 
 int main(void) {
     
     RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4);
+	
+	/*Test:
+	Reproduire l'expérience du blink avec les fonction définie plus haut
+	*/
 
+
+	MyGPIO_Struct_TypeDef * LD2 = {GPIOA ; PIN_NUMBER ; Out_Ppull};
+	//Led 2 activation structure
+	
+	//Initiating LED 2 
+	
+	MyGPIO_Init(LD2);
+	
 }
