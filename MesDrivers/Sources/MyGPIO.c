@@ -1,9 +1,9 @@
 #include "MyGPIO.h"
-#define PIN_NUMBER 5
+#define PIN_NUMBER (5)
 
 //Renvoie la valeur trouvée dans le Control Register correspondant au pin
 //Je sais pas si c'est ce qui est attendu
-int MyGPIO_Read(GPIO_TypeDef * GPIO, char GPIO_Pin) {
+/*int MyGPIO_Read(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 
 	int value;
 	int pin = (int)GPIO_Pin;
@@ -17,15 +17,22 @@ int MyGPIO_Read(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 		value = GPIO->CRL;
 	}
 	return value;
+}*/
+
+int MyGPIO_Read(GPIO_TypeDef * GPIO, char GPIO_Pin) {
+
+	return GPIO->IDR & (0x1 << GPIO_Pin);
+	
 }
+
 
 void MyGPIO_Set(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 	
-	int pin = (int)GPIO_Pin;
+	//int pin = (int)GPIO_Pin;
 	
 	// On met à un le bon bit et on le déplace dans les 16 premiers bits pour affecter la valeur
 	// https://gist.github.com/iwalpola/6c36c9573fd322a268ce890a118571ca
-	GPIO->BSRR |= (0b01 << pin) << 16;
+	GPIO->BSRR |= (1 << GPIO_Pin) << 16 ;
 	
 }
 
@@ -35,7 +42,7 @@ void MyGPIO_Reset(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 	
 	// On met à un le bon bit et on le déplace dans les 16 bits de poids fort pour affecter la valeur
 	// https://gist.github.com/iwalpola/6c36c9573fd322a268ce890a118571ca
-	GPIO->BRR |= (0b01 << pin) << 16;
+	GPIO->BRR |= (1 << pin) << 16;
 	
 }
 
@@ -50,10 +57,11 @@ void MyGPIO_Toggle(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 
 void MyGPIO_Init (MyGPIO_Struct_TypeDef * GPIOStructPtr){
 	
-	if(GPIOStructPtr->GPIO_Conf == Out_Ppull){
-		GPIOStructPtr->GPIO->CRL &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
-		GPIOStructPtr->GPIO->CRL |= 0x3 << ( (GPIOStructPtr->GPIO_Pin)*4);
-	}
+	//Mise à 0 des 4 bits correspondant dans CRL
+	GPIOStructPtr->GPIO->CRL &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
+	//Sélection du mode et de la config de la pin (Sur 4 bits : 0b(2 bits CNF)(2 bits MODE) )
+	GPIOStructPtr->GPIO->CRL |= GPIOStructPtr->GPIO_Conf << (GPIOStructPtr->GPIO_Pin*4);
+	
 
 }
 
@@ -69,21 +77,23 @@ void MyGPIO_Init (MyGPIO_Struct_TypeDef * GPIOStructPtr){
 } GPIO_TypeDef;*/
 
 
-
-int main(void) {
-    
-    RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4);
-	
-	/*Test:
-	Reproduire l'expérience du blink avec les fonction définie plus haut
-	*/
-
-
-	MyGPIO_Struct_TypeDef * LD2 = {GPIOA ; PIN_NUMBER ; Out_Ppull};
+MyGPIO_Struct_TypeDef LD2 = {GPIOA , PIN_NUMBER , Out_Ppull};
 	//Led 2 activation structure
-	
-	//Initiating LED 2 
-	
-	MyGPIO_Init(LD2);
-	
-}
+
+
+//int main(void) {
+//    
+//    RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4);
+//	
+//	/*Test:
+//	Reproduire l'expérience du blink avec les fonction définie plus haut
+//	*/
+
+
+//	
+//	
+//	//Initiating LED 2 
+//	
+//	MyGPIO_Init(&LD2);
+//	
+//}
