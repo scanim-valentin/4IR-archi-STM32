@@ -4,22 +4,22 @@
 
 typedef struct{
 	GPIO_TypeDef * GPIO ;
-	char GPIO_Pin ; //numero de 0 Ã  15
+	char GPIO_Pin ; //numero de 0 à 15
 	char GPIO_Conf ; // voir ci-dessous
 } MyGPIO_Struct_TypeDef;
 
-#define In_Floating 0x01 
+#define In_Floating (0x4) 
 
-#define In_PullDown 0x02 
-#define In_PullUp 0x02 // Not sure abt this
+#define In_PullDown (0x8) 
+#define In_PullUp (0x8) // Not sure abt this
 
-#define In_Analog 0x00 
+#define In_Analog (0x0) 
 
-
-#define Out_Ppull 0x00
-#define Out_OD 0x01
-#define AltOut_Ppull 0x02
-#define AltOut_OD 0x03 
+//50 Hz imposed = 0b--11
+#define Out_Ppull (0x3)
+#define Out_OD (0x7)
+#define AltOut_Ppull (0xB)
+#define AltOut_OD (0xF) 
 
 void MyGPIO_Init (MyGPIO_Struct_TypeDef * GPIOStructPtr);
 int MyGPIO_Read (GPIO_TypeDef * GPIO, char GPIO_Pin ); // renvoie 0 ou autre chose different de 0
