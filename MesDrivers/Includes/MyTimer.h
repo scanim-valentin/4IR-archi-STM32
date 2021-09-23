@@ -5,7 +5,7 @@
 #define TIMxCLK 72000000
 
 typedef struct {
-	TIM_TypeDef * Timer; // TIM1 à TIM4
+	TIM_TypeDef * Timer; // TIM1 Ã  TIM4
 	unsigned short ARR;
 	unsigned short PSC;
 } MyTimer_Struct_TypeDef;
@@ -14,12 +14,23 @@ typedef struct {
 /*
 *************************************************************************************************
 * @brief
-* @param -> Paramètre sous forme d’ une structure (son adresse) contenant les
+* @param -> ParamÃ¨tre sous forme dâ€™ une structure (son adresse) contenant les
 informations de base
-* @Note -> Fonction à lancer systématiquement avant d’ aller plus en détail dans les
+* @Note -> Fonction Ã  lancer systÃ©matiquement avant dâ€™ aller plus en dÃ©tail dans les
 conf plus fines (PWM, codeur inc...)
 *************************************************************************************************
 */
+
+/*
+Je veux T -> T = (1/TIMxCLK) * (PSC+1) * (ARR+1)
+
+Exemple 500ms -> 500e-3*13888.88 = (PSC+1) * (ARR+1)
+<=> 6944.44 = (PSC+1) * (ARR+1) = 32 * 217 (https://www.desmos.com/calculator?lang=fr)
+Soit PSC = 216 et ARR = 31 pour cet exemple (PSC max = 512 voir RM 92, ARR = 65535 rÃ©solution du timer)
+
+Lancer Timer -> CEN=1
+*/
+
 
 
 void MyTimer_Base_Init(MyTimer_Struct_TypeDef * TimerParam);
