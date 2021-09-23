@@ -5,6 +5,12 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * TimerParam){
 	TimerParam->Timer->ARR = TimerParam->ARR;	
 }
 
-void MyTimer_Base_Start(TIM_TypeDef * Timer) {
-	uwu
+//Enables the counter (CEN bit) in the TIMx->CR1 register
+void MyTimer_Base_Start(TIM_TypeDef * Timer){
+	Timer->CR1 ^= 0x01 ; 
+}
+
+//Disables the counter (CEN bit) in the TIMx->CR1 register
+void MyTimer_Base_Stop(TIM_TypeDef * Timer){
+	Timer->CR1 &= ~(0x01) ;
 }
