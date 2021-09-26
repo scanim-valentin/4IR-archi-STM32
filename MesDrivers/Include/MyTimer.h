@@ -38,7 +38,7 @@ void MyTimer_Base_Start(TIM_TypeDef * Timer);
 void MyTimer_Base_Stop(TIM_TypeDef * Timer);
 
 //GESTION DES INTERRUPTIONS
-void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio);
+void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio,  void (*f)(void) );
 
 #endif
 
