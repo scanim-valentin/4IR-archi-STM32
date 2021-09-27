@@ -51,10 +51,16 @@ void MyGPIO_Toggle(GPIO_TypeDef * GPIO, char GPIO_Pin) {
 
 void MyGPIO_Init (MyGPIO_Struct_TypeDef * GPIOStructPtr){
 	
-	//Mise à 0 des 4 bits correspondant dans CRL
-	GPIOStructPtr->GPIO->CRL &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
-	//Sélection du mode et de la config de la pin (Sur 4 bits : 0b(2 bits CNF)(2 bits MODE) )
-	GPIOStructPtr->GPIO->CRL |= GPIOStructPtr->GPIO_Conf << (GPIOStructPtr->GPIO_Pin*4);
-	
+	if(GPIOStructPtr->GPIO_Pin < 8){
+		//Mise à 0 des 4 bits correspondant dans CRL
+		GPIOStructPtr->GPIO->CRL &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
+		//Sélection du mode et de la config de la pin (Sur 4 bits : 0b(2 bits CNF)(2 bits MODE) )
+		GPIOStructPtr->GPIO->CRL |= GPIOStructPtr->GPIO_Conf << (GPIOStructPtr->GPIO_Pin*4);
+	}else{
+		//Mise à 0 des 4 bits correspondant dans CRH
+		GPIOStructPtr->GPIO->CRH &= ~(0xF << (GPIOStructPtr->GPIO_Pin)*4); //si on est au-délà pin 7 -> CRH et et one repart à 0 donc -8
+		//Sélection du mode et de la config de la pin (Sur 4 bits : 0b(2 bits CNF)(2 bits MODE) )
+		GPIOStructPtr->GPIO->CRH |= GPIOStructPtr->GPIO_Conf << (GPIOStructPtr->GPIO_Pin*4);
+	}
 
 }

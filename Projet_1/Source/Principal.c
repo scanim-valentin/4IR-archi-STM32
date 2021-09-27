@@ -18,7 +18,7 @@ int main(void)
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN | RCC_APB1ENR_TIM3EN | RCC_APB1ENR_TIM4EN;
 	
 	MyGPIO_Init(&GPIOx);
-	MyTimer_PWM(TIM2, 1);
+	//MyTimer_PWM(TIM2, 1);
 	
 	MyTimer_Base_Init(&timer_param);
 	MyTimer_Base_Start(TIM2);
