@@ -31,14 +31,17 @@ Soit PSC = 216 et ARR = 31 pour cet exemple (PSC max = 512 voir RM 92, ARR = 655
 Lancer Timer -> CEN=1
 */
 
-
-
+void Init_periph ( void (*f)(void));
 void MyTimer_Base_Init(MyTimer_Struct_TypeDef * TimerParam);
 void MyTimer_Base_Start(TIM_TypeDef * Timer);
 void MyTimer_Base_Stop(TIM_TypeDef * Timer);
 
 //GESTION DES INTERRUPTIONS
 void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio,  void (*f)(void) );
+
+//GESTION PWM 
+
+void MyTimer_PWM(TIM_TypeDef * Timer, char Channel);
 
 #endif
 

@@ -19,51 +19,66 @@ void MyTimer_Base_Stop(TIM_TypeDef * Timer){
 
 //Activates the overflow interuption of the timer and sets the priority to Prio
 //0 highest to 15 lowest
-/*
-//DEPRECATED
-void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio){
-	//UIE bit = update interuption. Overflow is an update 
-	Timer->DIER ^=  0x01 ;
-
-	NVIC_EnableIRQ(TIM4_IRQn);		
-	
-	//Setting the priority: 0bXXXX0000 
-	NVIC->IP[30] ^=  (prio << 4) ;
-}
-*/
 
 //REDEFINING TIMER HANDLERS WITH GENERIC FUNCTIONS PASSED FROM MyTimer_ActiveIT
 
 void (*generic_handler_function)(void);
 
 void TIM2_IRQHandler(void){
+	TIM2->SR &= ~(TIM_SR_UIF);
 	generic_handler_function();
-	//TODO: rabaisser le flag interruption
+
 }
 
 void TIM3_IRQHandler(void){
 	generic_handler_function();
-	//TODO: rabaisser le flag interruption
+	TIM3->SR &= ~(TIM_SR_UIF);
 }
 
 void TIM4_IRQHandler(void){
 	generic_handler_function();
-	//TODO: rabaisser le flag interruption
+	TIM4->SR &= ~(TIM_SR_UIF);
 }
 
 ///////////////////
 void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio,  void (*f)(void)){
 	//UIE bit = update interuption. Overflow is an update 
-	Timer->DIER ^=  0x01 ;
-
-	NVIC_EnableIRQ(TIM4_IRQn);		
-
-	//Setting the priority: 0bXXXX0000 
-	NVIC->IP[30] ^=  (prio << 4) ;
+	Timer->DIER ^=  TIM_DIER_UIE ;
 	
+	switch((int)Timer){
+		case (int)TIM2:
+			NVIC_EnableIRQ(TIM2_IRQn);		
+
+			//Setting the priority: 0bXXXX0000 
+			NVIC->IP[TIM2_IRQn] ^=  (prio << 4) ;
+			break;
+		
+		case (int)TIM3:
+			NVIC_EnableIRQ(TIM3_IRQn);		
+
+			//Setting the priority: 0bXXXX0000 
+			NVIC->IP[TIM3_IRQn] ^=  (prio << 4) ;
+			break;
+		
+		case (int)TIM4:
+			NVIC_EnableIRQ(TIM4_IRQn);		
+
+			//Setting the priority: 0bXXXX0000 
+			NVIC->IP[TIM4_IRQn] ^=  (prio << 4) ;
+			break;
+		}
 	//Setting up the handler
-	generic_handler_function = *f ;
+	Init_periph(f);
 }
+
+void Init_periph ( void (*f)(void)){
+	generic_handler_function = f;
+}
+/*
+void MyTimer_PWM(TIM_TypeDef * Timer, char Channel){
+	Timer->CCR4 = TIM_
+}
+*/
 
 
 
