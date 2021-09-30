@@ -41,8 +41,9 @@ void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio,  void (*f)(void) );
 
 //GESTION PWM 
 
-void MyTimer_PWM(TIM_TypeDef * Timer, char Channel);
-
+void MyTimer_PWM_Init(TIM_TypeDef * Timer, char Channel);
+void MyTimer_PWM_Generate(TIM_TypeDef * Timer, char Channel);
+void MyTimer_PWM_Change_Duty_Cycle(TIM_TypeDef * Timer, char Channel, short DC);
 #endif
 
 

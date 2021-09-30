@@ -1,5 +1,8 @@
 #include "MyTimer.h"
 
+#define MYTIM_PWM_MODE (6) // "110" : Edge aligned (mode 1); "111" : Center Aligned (mode 2)
+
+
 //Initializes the timer with prescaling and autoreload 
 //T = (1/TIMxCLK) * (PSC+1) * (ARR+1)
 void MyTimer_Base_Init(MyTimer_Struct_TypeDef * TimerParam){
@@ -104,11 +107,63 @@ void MyTimer_ActiveIT(TIM_TypeDef * Timer, char prio,  void (*f)(void)){
 void Init_periph ( void (*f)(void)){
 	generic_handler_function = f;
 }
-/*
-void MyTimer_PWM(TIM_TypeDef * Timer, char Channel){
-	Timer->CCR4 = TIM_
+
+
+//Configuring PWM (by default "Edge-Aligned" mode)
+void MyTimer_PWM_Init(TIM_TypeDef * Timer, char Channel){
+	
+	if( (Timer == TIM1) || (Timer == TIM8) ){
+			//Setting MOE bit to 1
+			Timer->BDTR |= TIM_BDTR_MOE;
+	}
+	
+	switch(Channel){
+		
+		case 1:
+			//Setting PWM mode to default mode + enabling preload register
+			Timer->CCMR1 |= MYTIM_PWM_MODE | TIM_CCMR1_OC1PE;
+			
+			//OCx polarity???
+		break;
+		
+		case 2:
+			Timer->CCMR1 |= MYTIM_PWM_MODE | TIM_CCMR1_OC2PE;
+		break;
+		
+		case 3:
+			Timer->CCMR2 |= MYTIM_PWM_MODE | TIM_CCMR2_OC3PE;
+		break;
+		
+		case 4:
+			Timer->CCMR2 |= MYTIM_PWM_MODE | TIM_CCMR2_OC4PE;
+		break;
+	}
+	
+	//Initializing all the registers
+	Timer->EGR |= TIM_EGR_UG;
+
 }
-*/
+
+//Modifies Duty Cycle 
+void MyTimer_PWM_Change_Duty_Cycle(TIM_TypeDef * Timer, char Channel, short DC){
+	switch(Channel){
+		case 1 :
+			Timer->CCR1 = DC;
+		break;
+		case 2 :
+			Timer->CCR2 = DC;
+		break;
+		case 3 :
+			Timer->CCR3 = DC;
+		break;
+		case 4 :
+			Timer->CCR4 = DC;
+		break;
+		
+	}
+}
+
+
 
 
 
