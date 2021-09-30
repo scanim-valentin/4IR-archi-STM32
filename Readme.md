@@ -2,7 +2,11 @@
 
 Pour tester les drivers, utiliser le projet Keil du dossier Projet_1 
 
-#Changelog :
+# Changelog :
+
+## Valentin 30/09/2021
+- 1ère version de MyTimer_PWM_Init et MyTimer_PWM_Change_Duty_Cycle à tester
+- Protoype de MyTimer_PWM_Generate
 
 ## Valentin 27/09/2021
 - Fonction MyGPIO_Init corrigée (prise en compte de numéro de pin > 8)
