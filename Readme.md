@@ -4,6 +4,10 @@ Pour tester les drivers, utiliser le projet Keil du dossier Projet_1
 
 # Changelog :
 
+## Robin & Valentin 05/10/2021
+-Fonctions PWM fonctionnent + handler LED qui s'éteint et s'allume progressivement
+-TODO: ADC
+
 ## Valentin 30/09/2021
 - 1ère version de MyTimer_PWM_Init et MyTimer_PWM_Change_Duty_Cycle à tester
 - Protoype de MyTimer_PWM_Generate
