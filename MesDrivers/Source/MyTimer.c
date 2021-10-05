@@ -121,21 +121,34 @@ void MyTimer_PWM_Init(TIM_TypeDef * Timer, char Channel){
 		
 		case 1:
 			//Setting PWM mode to default mode + enabling preload register
-			Timer->CCMR1 |= MYTIM_PWM_MODE | TIM_CCMR1_OC1PE;
-			
-			//OCx polarity???
+		
+			Timer->CCMR1 &= ~(TIM_CCMR1_OC1M_0);
+			//"110" : Edge aligned (mode 1); "111" : Center Aligned (mode 2)
+			Timer->CCMR1 |= TIM_CCMR1_OC1M_1| TIM_CCMR1_OC1M_2;
+			//Timer->CCMR1 |= MYTIM_PWM_MODE | TIM_CCMR1_OC1PE ;
+			Timer->CCER |= TIM_CCER_CC1E;
 		break;
 		
 		case 2:
-			Timer->CCMR1 |= MYTIM_PWM_MODE | TIM_CCMR1_OC2PE;
+			Timer->CCMR1 &= ~(TIM_CCMR1_OC2M_0);
+			Timer->CCMR1 |= TIM_CCMR1_OC2M_1| TIM_CCMR1_OC2M_2;
+			Timer->CCER |= TIM_CCER_CC2E;
+			
 		break;
 		
 		case 3:
-			Timer->CCMR2 |= MYTIM_PWM_MODE | TIM_CCMR2_OC3PE;
+			
+			Timer->CCMR2 &= ~(TIM_CCMR2_OC3M_0);
+			Timer->CCMR2 |= TIM_CCMR2_OC3M_1| TIM_CCMR2_OC3M_2;
+			Timer->CCER |= TIM_CCER_CC3E;
+			
 		break;
 		
 		case 4:
-			Timer->CCMR2 |= MYTIM_PWM_MODE | TIM_CCMR2_OC4PE;
+			Timer->CCMR2 &= ~(TIM_CCMR2_OC4M_0);
+			Timer->CCMR2 |= TIM_CCMR2_OC4M_1| TIM_CCMR2_OC4M_2;
+			Timer->CCER |= TIM_CCER_CC4E;
+		
 		break;
 	}
 	
@@ -145,19 +158,21 @@ void MyTimer_PWM_Init(TIM_TypeDef * Timer, char Channel){
 }
 
 //Modifies Duty Cycle 
-void MyTimer_PWM_Change_Duty_Cycle(TIM_TypeDef * Timer, char Channel, short DC){
+void MyTimer_PWM_Change_Duty_Cycle(TIM_TypeDef * Timer, char Channel, float percent){
+	
+	int valeur = (int)((Timer->ARR)*percent);
 	switch(Channel){
 		case 1 :
-			Timer->CCR1 = DC;
+			Timer->CCR1 = valeur;
 		break;
 		case 2 :
-			Timer->CCR2 = DC;
+			Timer->CCR2 = valeur;
 		break;
 		case 3 :
-			Timer->CCR3 = DC;
+			Timer->CCR3 = valeur;
 		break;
 		case 4 :
-			Timer->CCR4 = DC;
+			Timer->CCR4 = valeur;
 		break;
 		
 	}
